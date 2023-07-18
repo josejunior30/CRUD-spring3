@@ -3,7 +3,6 @@ package com.junior.portifolio.config;
 import java.time.Instant;
 import java.util.Arrays;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -11,10 +10,12 @@ import org.springframework.context.annotation.Profile;
 
 import com.junior.portifolio.entities.Category;
 import com.junior.portifolio.entities.Order;
+import com.junior.portifolio.entities.OrderItem;
 import com.junior.portifolio.entities.Product;
 import com.junior.portifolio.entities.User;
 import com.junior.portifolio.entities.enuns.OrderStatus;
 import com.junior.portifolio.repository.CategoryRepository;
+import com.junior.portifolio.repository.OrderItemRepository;
 import com.junior.portifolio.repository.OrderRepository;
 import com.junior.portifolio.repository.ProductRepository;
 import com.junior.portifolio.repository.UserRepository;
@@ -32,6 +33,8 @@ public class TestConfig implements CommandLineRunner {
 	private ProductRepository productRepository;
 	@Autowired
 	private CategoryRepository categoryRepository;
+	@Autowired
+	private OrderItemRepository orderItemRepository;
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -71,6 +74,13 @@ public class TestConfig implements CommandLineRunner {
 		Order o3 = new Order(null, Instant.parse("2019-07-22T15:21:22Z"), OrderStatus.WAITING_PAYMENT , u1);
 		
 		orderRepository.saveAll(Arrays.asList(o1, o2, o3));
+		
+		OrderItem oi1 = new OrderItem(o1, p1, 2, p1.getPrice());
+		OrderItem oi2 = new OrderItem(o1, p3, 1, p3.getPrice());
+		OrderItem oi3 = new OrderItem(o2, p3, 2, p3.getPrice());
+		OrderItem oi4 = new OrderItem(o3, p5, 2, p5.getPrice());
+		
+		orderItemRepository.saveAll(Arrays.asList(oi1, oi2, oi3, oi4));
 	}
 
 }

@@ -15,13 +15,24 @@ public class OrderItemPk implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	@ManyToOne
-	@JoinColumn(name="id_product")
-	private Product product;
 	
 	@ManyToOne
-	@JoinColumn(name="id_Order")
+	@JoinColumn(name="order_id")
 	private Order Order;
+
+	
+	@ManyToOne
+	@JoinColumn(name="product_id")
+	private Product product;
+	
+	public Order getOrder() {
+		return Order;
+	}
+
+	public void setOrder(Order order) {
+		Order = order;
+	}
+
 
 	public Product getProduct() {
 		return product;
@@ -31,13 +42,6 @@ public class OrderItemPk implements Serializable{
 		this.product = product;
 	}
 
-	public Order getOrder() {
-		return Order;
-	}
-
-	public void setOrder(Order order) {
-		Order = order;
-	}
 
 	@Override
 	public int hashCode() {
