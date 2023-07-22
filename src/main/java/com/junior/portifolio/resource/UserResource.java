@@ -18,46 +18,48 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.junior.portifolio.entities.User;
 import com.junior.portifolio.services.UserService;
+import com.junior.portifolio.services.Exceptions.ResourceNotFoundException;
 
 @RestController
-@RequestMapping(value= "/users")
+@RequestMapping(value = "/users")
 public class UserResource {
-	
+
 	@Autowired
 	private UserService service;
-	
+
 	@GetMapping
-	public ResponseEntity<List<User>> findAll(){
-		List<User>list = service.findAll();
-		
+	public ResponseEntity<List<User>> findAll() {
+		List<User> list = service.findAll();
+
 		return ResponseEntity.ok().body(list);
 	}
-	
-	@GetMapping(value="/{id}")
-	public ResponseEntity<Optional<User>> findById(@PathVariable Long id){
+
+	@GetMapping(value = "/{id}")
+	public User findById(@PathVariable Long id) {
 		Optional<User> obj = service.findById(id);
-		
-		return ResponseEntity.ok().body(obj);
+
+		return obj.orElseThrow(()-> new ResourceNotFoundException(id));
 	}
+ 
 	@PostMapping
 	public ResponseEntity<User> insert(@RequestBody User obj) {
 		obj = service.insert(obj);
-		URI uri= ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).body(obj);
 	}
-	@DeleteMapping(value="/{id}")
-	public ResponseEntity <Void> delete(@PathVariable Long id){
+
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
-			
+
 	}
-	
-	@PutMapping(value="/{id}")
-	public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User obj){
-		obj= service.update(id, obj);
+
+	@PutMapping(value = "/{id}")
+	public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User obj) {
+		obj = service.update(id, obj);
 		return ResponseEntity.ok().body(obj);
-		
+
 	}
-	
 
 }
